@@ -7,7 +7,7 @@
 // #endif
 
 
-// static const int led_pin = BUILTIN_LED;
+// static const int led_pin = 1;
 
 // void toogleLED(void *parameter)
 // {
@@ -29,7 +29,7 @@
 //         toogleLED,
 //         "toggleLED",
 //         1024,
-//         (void*) 500,
+//         (void*) 1000,
 //         1,
 //         NULL,
 //         app_cpu);
@@ -38,11 +38,12 @@
 //         toogleLED,
 //         "toogleLED2",
 //         1024,
-//         (void*) 100,
-//         1,
+//         (void*) 500,
+//         2,
 //         NULL);
 // }
 
 // void loop()
 // {
+//     // digitalWrite(led_pin, LOW);
 // }
