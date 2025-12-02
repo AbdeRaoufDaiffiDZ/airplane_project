@@ -3,15 +3,13 @@
 ////////////////////////////////////////////////// surfaces control transmitter ////////////////////////////////////////////////
 
 
-AircraftData read_controllers_in()
+void read_controllers_in()
 {
-    AircraftData data;
     data.aileron = analogRead(aileron_controller_pin) / 16; // Scale 0-1023 to 0-255
     data.elevator = analogRead(elevator_controller_pin) / 16;
     data.radder = analogRead(radder_controller_pin) / 16;
     data.throttle = analogRead(throttle_controller_pin) / 16;
     data.has_payload = true;
-    return data;
 }
 
 ////////////////////////////////////////////////// surfaces control reciver //////////////////////////////////////////////////

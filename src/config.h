@@ -40,7 +40,7 @@ struct AircraftData
     uint8_t throttle;
     bool has_payload;
 };
-AircraftData data;
+AircraftData data = {0, 0, 0, 0, false};
 
 void setup_inputs()
 {
@@ -88,28 +88,4 @@ void setup_servos()
     // Initialize throttle to minimum
     throttle_esc.writeMicroseconds(MIN_THROTTLE_US);
     delay(3000);
-}
-
-void ready_light_on()
-{
-    // Indicate that the system is ready (e.g., turn on an LED)
-    digitalWrite(LED_BUILTIN, HIGH); // Assuming built-in LED indicates readiness
-}
-
-void start(bool read_swicth)
-{
-    if (read_swicth == LOW)
-    {
-    }
-    else
-    {
-        // Blink the built-in LED three times to indicate startup
-        for (uint8_t i = 0; i < 3; i++)
-        {
-            digitalWrite(LED_BUILTIN, LOW); // Turn off the LED when starting
-            delay(500);
-            digitalWrite(LED_BUILTIN, HIGH);
-            delay(500);
-        }
-    }
 }

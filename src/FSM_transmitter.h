@@ -11,6 +11,7 @@ void FSM_transmitter()
     {
     case AircraftStates_transmitter::INITIALIZING:
         // One-time setup
+        setup_inputs(); // Setup analog stick pins and the SWICTH_PIN
         current_state_transmitter = AircraftStates_transmitter::CONFIG_SETUP;
         break;
 
@@ -22,7 +23,7 @@ void FSM_transmitter()
             count_send_fails = 0; // Reset counter
                                   // Transition to the next safe state
             Serial.println("Transition to IDEAL.");
-            current_state_transmitter = AircraftStates_transmitter::TRANSMITTING; //////////////////  you ust change this
+            current_state_transmitter = AircraftStates_transmitter::IDEAL; //////////////////  you ust change this
         }
         else // Handshake failed
         {
@@ -50,7 +51,7 @@ void FSM_transmitter()
 
         if (digitalRead(SWICTH_PIN) == HIGH)
         {
-            sleep(10); // Debounce delay
+            delay(50); // Debounce delay
             button_state = !button_state;
 
             Serial.print("Switch State: ");
@@ -60,35 +61,38 @@ void FSM_transmitter()
         {
             Serial.println("Arm switch activated. Transition to READY_TO_ARM.");
             current_state_transmitter = AircraftStates_transmitter::READY_TO_ARM;
+            break;
         }
-        data.has_payload = false; // No actual control data
-        data.throttle = analogRead(throttle_controller_pin);     // Set throttle to minimum for safety
-        send_message(data);       // Send empty data as heartbeat
+        data.has_payload = false;                            // No actual control data
+        data.throttle = 50; // Set throttle to minimum for safety
+        send_message(data);                                  // Send empty data as heartbeat
         // ... (Keep sending heartbeat or status update here) ...
         break;
 
     case AircraftStates_transmitter::READY_TO_ARM:
         // Logic to check if sticks are centered (safety check)
         // ...
-
-        // If checks pass, transition to TRANSMITTING
-        // current_state_transmitter = AircraftStates_transmitter::TRANSMITTING;
-        data.has_payload = false; // No actual control data
-        data.throttle = 50;     // Set throttle to minimum for safety
-        send_message(data);      // Send empty data as heartbeat
-
-        // If arm switch is turned off, go back to IDEAL
-        if (button_state == LOW)
+        if (button_state == LOW) // will not work check it
         {
             Serial.println("Arm switch deactivated. Transition to IDEAL.");
             current_state_transmitter = AircraftStates_transmitter::IDEAL;
         }
+        current_state_transmitter = AircraftStates_transmitter::TRANSMITTING;
         break;
+        // // If checks pass, transition to TRANSMITTING
+        // // current_state_transmitter = AircraftStates_transmitter::TRANSMITTING;
+        // data.has_payload = false; // No actual control data
+        // data.throttle = 50;       // Set throttle to minimum for safety
+        // send_message(data);       // Send empty data as heartbeat
+
+        // // If arm switch is turned off, go back to IDEAL
+        
+        // break;
 
     // Add logic for TRANSMITTING and FAILSAFE
     case AircraftStates_transmitter::TRANSMITTING:
         // Read analog sticks and call send_message()
-        data = read_controllers_in();
+        read_controllers_in();
         send_message(data);
         // ...
         break;

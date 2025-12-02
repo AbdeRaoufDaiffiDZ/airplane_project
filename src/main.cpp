@@ -3,12 +3,10 @@
 
 void setup()
 {
-    // setup_inputs(); // Setup analog stick pins and the SWICTH_PIN
-    // setup_sender();
+   
 
     Serial.begin(115200);
     // // Add an initial brief printout to show the device is running
-    Serial.println("Transmitter Initializing...");
     setup_servos();
     setup_reciver();
 }
@@ -20,7 +18,7 @@ void loop()
     // FSM_transmitter();
     // Serial.print("throtel: ");
     // Serial.println(analogRead(throttle_controller_pin));
-    AircraftData data = recieve_data();
+    // recieve_data();
     //
     //   Serial.print("Radder: ");
     //   Serial.print(data.radder);

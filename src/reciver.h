@@ -8,9 +8,7 @@ bool setup_reciver()
   if (!radio.begin())
   { // <-- FIX: Was "radio"
     Serial.println("Radio hardware is not responding!!");
-    while (1)
-    {
-    } // Freeze
+    
   }
 
   // Set the address
