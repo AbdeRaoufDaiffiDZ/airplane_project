@@ -4,6 +4,15 @@
 #include <SPI.h>
 #include <RF24.h>
 #include <ESP32Servo.h>
+
+#if CONFIG_FREERTOS_UNICORE
+static const BaseType_t app_cpu = 0;
+#else
+static const BaseType_t app_cpu_1 = 1;
+static const BaseType_t app_cpu_0 = 0;
+
+#endif
+
 // Define the pins NRF24L01+ connected to
 #define CE_PIN 4
 #define CSN_PIN 5
@@ -11,8 +20,8 @@
 
 ////////////////////////////////////////////////// transmitter config //////////////////////////////////////////////////
 // inputs controllers for aircraft config
-#define aileron_controller_pin 33
-#define elevator_controller_pin 25
+#define aileron_controller_pin 25
+#define elevator_controller_pin 33
 #define radder_controller_pin 26
 #define wheels_controller_pin 27
 #define throttle_controller_pin 32
@@ -54,9 +63,15 @@ void setup_inputs()
 
 ////////////////////////////////////////////////// reciver config //////////////////////////////////////////////////
 
+// FreeRtos config
+
+QueueHandle_t queue_aircraft_data;
+
+////////////////////////////////////////////////////////////////////////////////////////
+
 // outputs to actutators for aircraft config
-#define aileron_servo_pin 33
-#define elevator_servo_pin 25
+#define aileron_servo_pin 25
+#define elevator_servo_pin 26
 #define radder_servo_pin 26
 #define wheels_servo_pin 27
 #define throttle_esc_pin 32
@@ -76,16 +91,22 @@ Servo aileron_servo, elevator_servo, radder_servo, throttle_esc;
 uint8_t no_data = MAX_RECIVE_TRIES; // Counter for lost data packets
 void setup_servos()
 {
-    aileron_servo.attach(aileron_servo_pin);
+    // aileron_servo.attach(aileron_servo_pin);
     elevator_servo.attach(elevator_servo_pin);
-    radder_servo.attach(radder_servo_pin);
-    // wheels_servo.attach(wheels_servo_pin);
-    throttle_esc.attach(throttle_esc_pin, MIN_THROTTLE_US, MAX_THROTTLE_US);
+    // radder_servo.attach(radder_servo_pin);
+    // // wheels_servo.attach(wheels_servo_pin);
+    // throttle_esc.attach(throttle_esc_pin, MIN_THROTTLE_US, MAX_THROTTLE_US);
 
-    // Calibrate ESC by sending max throttle signal for 4 seconds
-    throttle_esc.writeMicroseconds(MAX_THROTTLE_US);
-    delay(4000); // Wait for 4 seconds
-    // Initialize throttle to minimum
-    throttle_esc.writeMicroseconds(MIN_THROTTLE_US);
-    delay(3000);
+    // // Calibrate ESC by sending max throttle signal for 4 seconds
+    // throttle_esc.writeMicroseconds(MAX_THROTTLE_US);
+    // delay(4000); // Wait for 4 seconds
+    // // Initialize throttle to minimum
+    // throttle_esc.writeMicroseconds(MIN_THROTTLE_US);
+    // delay(3000);
+}
+
+void setupFreeRtos()
+{
+    queue_aircraft_data = xQueueCreate(1, sizeof(AircraftData));
+    
 }
