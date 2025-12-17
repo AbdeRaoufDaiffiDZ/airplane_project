@@ -64,6 +64,8 @@
 //     uint8_t i = 0;
 //     while (1)
 //     {
+//         int testPin[] = {2, 4, 5, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 25, 26, 27, 32, 33};
+
 //         if (xQueueReceive(queue_1, &data_ptr, 0) == pdTRUE)
 //         {
 //             delay = atoi(data_ptr);
@@ -75,10 +77,20 @@
 //         else
 //         {
 //         }
-//         digitalWrite(LED_BUILTIN, HIGH);
-//         vTaskDelay(delay / portTICK_PERIOD_MS);
-//         digitalWrite(LED_BUILTIN, LOW);
-//         vTaskDelay(delay / portTICK_PERIOD_MS);
+
+//         if (i < sizeof(testPin))
+//         {
+//                         Serial.print("pin: ");
+
+//                         Serial.println(sizeof(testPin) );
+
+//             pinMode(testPin[i], OUTPUT);
+
+//             digitalWrite(testPin[i], LOW);
+//             vTaskDelay(delay / portTICK_PERIOD_MS);
+//             digitalWrite(testPin[i], HIGH);
+//             vTaskDelay(delay / portTICK_PERIOD_MS);
+//         }
 //         if (i >= 100)
 //         {
 //             char *msg = (char *)pvPortMalloc(sizeof(delay) + 1);
@@ -109,7 +121,6 @@
 // void setup()
 // {
 //     Serial.begin(115200);
-//     pinMode(LED_BUILTIN, OUTPUT);
 //     vTaskDelay(1000 / portTICK_PERIOD_MS);
 //     Serial.println();
 //     Serial.println("Starting Queue Example");

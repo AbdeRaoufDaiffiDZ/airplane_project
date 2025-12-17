@@ -85,11 +85,10 @@ QueueHandle_t queue_aircraft_data;
 // DEFINE the servo objects
 Servo aileron_servo, elevator_servo, radder_servo, throttle_esc;
 
-// DEFINE the radio object and address *once*
 
-// VARUABLES to hold received data
 uint8_t no_data = MAX_RECIVE_TRIES; // Counter for lost data packets
 void setup_servos()
+
 {
     // aileron_servo.attach(aileron_servo_pin);
     elevator_servo.attach(elevator_servo_pin);
@@ -103,10 +102,4 @@ void setup_servos()
     // // Initialize throttle to minimum
     // throttle_esc.writeMicroseconds(MIN_THROTTLE_US);
     // delay(3000);
-}
-
-void setupFreeRtos()
-{
-    queue_aircraft_data = xQueueCreate(1, sizeof(AircraftData));
-    
 }
